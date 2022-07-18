@@ -42,7 +42,8 @@
     "docgen": "npx hardhat docgen",
     "slither": "slither .",
     "coverage": "npx hardhat coverage --testfiles test",
-    "flatt": "npx hardhat flatten > Lottery.sol"
+    "flatt": "npx hardhat flatten > Lottery.sol",
+    "prettier": "prettier --write 'contracts/Lottery.sol'"
   },
   "repository": {
     "type": "git",
