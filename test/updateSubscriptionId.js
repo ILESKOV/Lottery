@@ -36,3 +36,4 @@ describe("updateSubscriptionId tests", function () {
     expect(await Lottery.getSubscriptionId()).to.equal(2);
   });
 });
+
