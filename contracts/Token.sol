@@ -9,3 +9,4 @@ contract LOTcoin is ERC20 {
     _mint(msg.sender, 5000);
   }
 }
+
