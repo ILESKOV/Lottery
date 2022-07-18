@@ -74,3 +74,4 @@ describe("fulfillRandomWords", function () {
     expect(await LOT.balanceOf(owner.address)).to.equal(4010);
   });
 });
+
