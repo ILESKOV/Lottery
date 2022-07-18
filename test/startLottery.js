@@ -83,3 +83,4 @@ describe("After lottery started", function () {
     expect(await Lottery.getLength()).to.equal(0);
   });
 });
+
