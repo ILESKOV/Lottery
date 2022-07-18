@@ -197,3 +197,4 @@ describe("participation logic", function () {
       .withArgs(player2.address, 1);
   });
 });
+
