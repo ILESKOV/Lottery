@@ -46,11 +46,13 @@ $ npm install
 `$ npm run test`
 
 ### 5. Deploy to Rinkeby
-`$ npm run deployLOT
+`$ npm run deployLOT ` 
+ `
  $ npm run deployLottery
  `
 ### 6. Verify contracts
-`$ npm run verifyLOT
+`$ npm run verifyLOT `
+ `
  $ npm run verifyLottery
  `
 
