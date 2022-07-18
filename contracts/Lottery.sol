@@ -283,3 +283,4 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     return _randomWord.length;
   }
 }
+
