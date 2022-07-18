@@ -36,3 +36,4 @@ describe("update ticket price tests", function () {
     expect(await Lottery.getTicketPrice()).to.equal(100);
   });
 });
+
