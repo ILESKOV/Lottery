@@ -71,3 +71,4 @@ describe("VRFv2 tests", function () {
     ).to.emit(Lottery, "ReceivedRandomness");
   });
 });
+
