@@ -4,7 +4,7 @@ require("dotenv").config();
 async function main() {
   const Lottery = await hre.ethers.getContractFactory("Lottery");
   const lottery = await Lottery.deploy(
-    8029,
+    process.env.SUBSCRIPTION_ID,
     process.env.VRF_COORDINATOR,
     process.env.KEY_HASH,
     process.env.LOT_ADDRESS
@@ -20,4 +20,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-
