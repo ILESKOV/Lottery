@@ -28,7 +28,7 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
   LOTTERY_STATE private lotteryState;
 
   uint16 private constant _REQUEST_CONFIRMATIONS = 3;
-  uint32 private constant _CALLBACK_GAS_LIMIT = 120000;
+  uint32 private constant _CALLBACK_GAS_LIMIT = 140000;
   uint32 private constant _NUM_WORDS = 1;
   uint64 private _subscriptionId;
   uint256 private _numberOfTicket = 0;
