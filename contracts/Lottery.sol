@@ -6,7 +6,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "./Token.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
  * @title Lottery contract
@@ -49,7 +49,7 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
   event ParticipationFeeUpdated(uint256 indexed usdParticipationFee);
   event NewParticipant(address indexed player, uint256 indexed lotteryId);
 
-  ERC20 public lottery_coin;
+  IERC20 public lottery_coin;
 
   /**
    * @dev _subscriptionID can be obtained from here:
@@ -70,7 +70,7 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     _subscriptionId = subscriptionId_;
     _vrfCoordinator = vrfCoordinator_;
     _keyHash = keyHash_;
-    lottery_coin = ERC20(token);
+    lottery_coin = IERC20(token);
 
     lotteryState = LOTTERY_STATE.CLOSED;
   }
