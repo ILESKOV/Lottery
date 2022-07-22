@@ -47,12 +47,16 @@ $ npm install
 
 ### 5. Deploy to Rinkeby
 `$ npm run deployLOT ` 
-
+!!!Important!!! 
+insert current token contract address into your environment variables
 
 `
  $ npm run deployLottery
  `
-### 6. Verify contracts
+### 6. Insert current contract addresses into package.json
+![Example screenshot](./Screenshot 7.png)
+
+### 7. Verify contracts
 `$ npm run verifyLOT `
 
 
