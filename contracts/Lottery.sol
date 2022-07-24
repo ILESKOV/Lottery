@@ -135,9 +135,6 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
    * NOTE: Function to calculate the winner
    * Only owner could call this function
    * @dev Will revert if subscription is not set and funded
-   * subscription can be obtained from here:
-   * Rinkeby testnet(https://vrf.chain.link/rinkeby) or
-   * Mainnet(https://vrf.chain.link/mainnet)
    * RequestRandomness event is emitted
    */
   function _pickWinner() private onlyOwner {
