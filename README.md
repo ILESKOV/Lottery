@@ -45,6 +45,8 @@ $ npm install
 ### 4. Run Tests
 `$ npm run test`
 
+`$ npm run coverage`
+
 ### 5. Deploy to Rinkeby
 `$ npm run deployLOT ` 
 !!!Important!!! 
