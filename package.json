@@ -41,6 +41,7 @@
     "verifyLottery": "npx hardhat verify --network rinkeby --contract contracts/Lottery.sol:Lottery --constructor-args arguments.js [Lottery.sol address]",
     "docgen": "npx hardhat docgen",
     "slither": "slither .",
+    "solhint": "solhint 'contracts/**/*.sol'",
     "coverage": "npx hardhat coverage --testfiles test",
     "flatt": "npx hardhat flatten > Lottery.sol",
     "prettier": "prettier --write 'contracts/Lottery.sol'"
