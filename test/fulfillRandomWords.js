@@ -21,8 +21,8 @@ beforeEach(async () => {
     Lottery = await lottery.deploy(1, VrfCoordinatorV2Mock.address, process.env.KEY_HASH, LOT.address)
 
     await Lottery.startLottery()
-    await LOT.transfer(player1.address, 500)
-    await LOT.connect(player1).approve(Lottery.address, 50)
+    await LOT.transfer(player1.address, BigNumber.from("500000000000000000000"))
+    await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
 })
 describe("fulfillRandomWords", function () {
     it("check random word was created", async () => {
@@ -48,28 +48,28 @@ describe("fulfillRandomWords", function () {
     })
 
     it("check that winner gets the prize", async () => {
-        await LOT.transfer(player2.address, 500)
-        await LOT.connect(player2).approve(Lottery.address, 50)
+        await LOT.transfer(player2.address, BigNumber.from("500000000000000000000"))
+        await LOT.connect(player2).approve(Lottery.address, BigNumber.from("50000000000000000000"))
         await Lottery.connect(player1).participate()
         await Lottery.connect(player2).participate()
         await Lottery.endLottery()
         await VrfCoordinatorV2Mock.fulfillRandomWords(1, Lottery.address)
-        expect(await LOT.balanceOf(player2.address)).to.equal(540)
+        expect(await LOT.balanceOf(player2.address)).to.equal(BigNumber.from("540000000000000000000"))
     })
 
     it("Check that owner have received a reward", async () => {
-        await LOT.transfer(player2.address, 500)
-        await LOT.connect(player2).approve(Lottery.address, 50)
+        await LOT.transfer(player2.address, BigNumber.from("500000000000000000000"))
+        await LOT.connect(player2).approve(Lottery.address, BigNumber.from("50000000000000000000"))
         await Lottery.connect(player1).participate()
         await Lottery.connect(player2).participate()
         await Lottery.endLottery()
         await VrfCoordinatorV2Mock.fulfillRandomWords(1, Lottery.address)
-        expect(await LOT.balanceOf(owner.address)).to.equal(4010)
+        expect(await LOT.balanceOf(owner.address)).to.equal(BigNumber.from("4010000000000000000000"))
     })
 
     it("Check random word", async () => {
-        await LOT.transfer(player2.address, 500)
-        await LOT.connect(player2).approve(Lottery.address, 50)
+        await LOT.transfer(player2.address, BigNumber.from("500000000000000000000"))
+        await LOT.connect(player2).approve(Lottery.address, BigNumber.from("50000000000000000000"))
         await Lottery.connect(player1).participate()
         await Lottery.connect(player2).participate()
         await Lottery.endLottery()
@@ -79,4 +79,3 @@ describe("fulfillRandomWords", function () {
         )
     })
 })
-
