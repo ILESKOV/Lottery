@@ -20,8 +20,8 @@ beforeEach(async () => {
 
     Lottery = await lottery.deploy(1, VrfCoordinatorV2Mock.address, process.env.KEY_HASH, LOT.address)
 
-    await LOT.transfer(player1.address, 500)
-    await LOT.connect(player1).approve(Lottery.address, 50)
+    await LOT.transfer(player1.address, BigNumber.from("500000000000000000000"))
+    await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
 })
 describe("end lottery", function () {
     it("impossible to end lottery that didn't started", async () => {
