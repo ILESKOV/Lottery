@@ -38,8 +38,8 @@ describe("After lottery started", function () {
 
     it("should not allow start new lottery until state is 'CALCULATING_WINNER'", async () => {
         await Lottery.startLottery()
-        await LOT.transfer(player1.address, 500)
-        await LOT.connect(player1).approve(Lottery.address, 50)
+        await LOT.transfer(player1.address, BigNumber.from("500000000000000000000"))
+        await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
         await Lottery.connect(player1).participate()
         await Lottery.endLottery()
         await expect(Lottery.startLottery()).to.be.revertedWith("Can't start a new lottery")
@@ -67,8 +67,8 @@ describe("After lottery started", function () {
 
     it("should ckeck current random word is 0 when new lottery started", async () => {
         await Lottery.startLottery()
-        await LOT.transfer(player1.address, 500)
-        await LOT.connect(player1).approve(Lottery.address, 50)
+        await LOT.transfer(player1.address, BigNumber.from("500000000000000000000"))
+        await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
         await Lottery.connect(player1).participate()
         await Lottery.endLottery()
         await VrfCoordinatorV2Mock.fulfillRandomWords(1, Lottery.address)
