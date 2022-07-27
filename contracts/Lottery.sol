@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 
-pragma solidity 0.8.15;
+pragma solidity ^0.8.15;
 
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
@@ -32,7 +32,7 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     uint32 private constant _NUM_WORDS = 1;
     uint64 private _subscriptionId;
     uint256 private _numberOfTicket = 0;
-    uint256 private _ticketPrice = 50;
+    uint256 private _ticketPrice = 50 * 10**18;
     uint256 private _lotteryBalance = 0;
     address private _vrfCoordinator;
     bytes32 private _keyHash;
