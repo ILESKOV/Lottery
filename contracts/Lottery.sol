@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 
-pragma solidity ^0.8.15;
+pragma solidity 0.8.15;
 
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
@@ -11,127 +11,184 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /**
  * @title Lottery contract
  * NOTE: Contract use Chainlink Oracle for generating random words
- * @dev Needs to fund subscription and add contract address as a consumer
- * on https://vrf.chain.link/rinkeby for Rinkeby testnet and
- * https://vrf.chain.link/mainnet for mainnet
- * in order to work with VRFv2
- * Lottery ticket is ERC721 token standard and could be bought with LOT ERC-20 tokens
+ * Needs to fund subscription and add contract address after deploying as a consumer
+ * on https://vrf.chain.link in order to work with VRFv2
+ * @dev Lottery ticket is ERC721 token standard and could be bought with LOT ERC-20 tokens
  */
 contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     VRFCoordinatorV2Interface private _coordinator;
+    IERC20 private _lotCoin;
 
     enum LOTTERY_STATE {
         OPEN,
         CLOSED,
         CALCULATING_WINNER
     }
-    LOTTERY_STATE private lotteryState;
 
-    uint16 private constant _REQUEST_CONFIRMATIONS = 3;
-    uint32 private constant _CALLBACK_GAS_LIMIT = 140000;
-    uint32 private constant _NUM_WORDS = 1;
-    uint64 private _subscriptionId;
-    uint256 private _numberOfTicket = 0;
-    uint256 private _ticketPrice = 50 * 10**18;
-    uint256 private _lotteryBalance = 0;
+    LOTTERY_STATE private _lotteryState;
     address private _vrfCoordinator;
     bytes32 private _keyHash;
-    uint256 private _lotteryId = 0;
-    uint256[] private _randomWord;
+    uint256 private _numberOfTicket;
+    uint256 private _ticketPrice;
+    uint256 private _lotteryBalance;
+    uint256 private _lotteryId;
+    uint256 private _percentageWinner;
+    uint256 private _percentageOwner;
+    uint64 private _subscriptionId;
+    uint16 public constant _REQUEST_CONFIRMATIONS = 3;
+    uint32 public constant _CALLBACK_GAS_LIMIT = 140000;
+    uint32 public constant _NUM_WORDS = 1;
     uint256 public requestId;
-    IERC20 public lotteryCoin;
 
-    mapping(uint256 => address payable) private _userTickets;
-    mapping(uint256 => address payable) private _lotteryWinners;
+    uint256[] private _randomWord;
 
-    event RequestedRandomness(uint256 requestId);
-    event ReceivedRandomness(uint256 requestId, uint256 n1);
-    event SubscriptionChanged(uint64 subscriptionId);
-    event ParticipationFeeUpdated(uint256 indexed usdParticipationFee);
-    event NewParticipant(address indexed player, uint256 indexed lotteryId);
+    mapping(uint256 => address) private _userTickets;
+    mapping(uint256 => address) private _lotteryWinners;
 
     /**
-     * @dev _subscriptionID can be obtained from here:
-     * Rinkeby testnet(https://vrf.chain.link/rinkeby) or
-     * Mainnet(https://vrf.chain.link/mainnet)
-     * AggregatorV3Interface for rinkeby address: 0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
-     * _VRFCoordinator for rinkeby address: 0x6168499c0cFfCaCD319c818142124B7A15E857ab
-     * _keyHash for Rinkeby: 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc
-     * the last parameter is Token.sol address
+     * @dev Emitted when new request to VRF coordinator sended
+     * @param requestId id of generate randomness request
+     */
+    event RequestedRandomness(uint256 requestId);
+
+    /**
+     * @dev Emitted when VRF coordinator returns a new random word
+     * @param requestId id of generate randomness request
+     * @param number random number returned from VRF coordinator contract
+     */
+    event ReceivedRandomness(uint256 requestId, uint256 number);
+
+    /**
+     * @dev Emitted when new lottery started
+     * @param lotteryId id of lottery
+     */
+    event NewLotteryStarted(uint256 lotteryId);
+
+    /**
+     * @dev Emitted when lottery ended
+     * @param lotteryId id of lottery
+     * @param winner of this lottery
+     */
+    event LotteryEnded(uint256 lotteryId, address winner);
+
+    /**
+     * @dev Emitted when new percentages of the total balance paid for the
+     * winner and owner setted
+     * @param percentageWinner_ percentage paid for the winner
+     * @param percentageOwner_ percentage paid for the owner
+     */
+    event PercentagesChanged(uint256 percentageWinner_, uint256 percentageOwner_);
+
+    /**
+     * @dev Emitted when a new subscriptionId setted
+     */
+    event SubscriptionChanged(uint64 subscriptionId);
+
+    /**
+     * @dev Emitted when a new participation fee is established
+     */
+    event ParticipationFeeUpdated(uint256 indexed usdParticipationFee);
+
+    /**
+     * @dev Emitted when a new participant appears
+     */
+    event NewParticipant(address indexed participant, uint256 indexed lotteryId);
+
+    /**
+     * @dev vrfCoordinator_ and keyHash_ can be obtained
+     * from here: https://docs.chain.link/docs/vrf-contracts/
+     * @param subscriptionId_  can be obtained from here: https://vrf.chain.link
+     * @param vrfCoordinator_  VRF coordinator contract address
+     * @param keyHash_ The gas lane key hash value, which is the maximum
+     * gas price you are willing to pay for a request in wei
+     * @param token_ 'LOT' tokem contract address
+     * @param percentageWinner_ percentage paid for the winner
+     * @param percentageOwner_ percentage paid for the owner
+     * @param ticketPrice_ price in 'LOT' tokens for one ticket in order to participate
      */
     constructor(
         uint64 subscriptionId_,
         address vrfCoordinator_,
         bytes32 keyHash_,
-        address token
+        address token_,
+        uint256 percentageWinner_,
+        uint256 percentageOwner_,
+        uint256 ticketPrice_
     ) VRFConsumerBaseV2(vrfCoordinator_) ERC721("LotteryTicket", "ticket") {
+        require(subscriptionId_ != 0, "Wrong subscriptionId");
+        require(vrfCoordinator_ != address(0), "Wrong vrfCoordinator address");
+        require(keyHash_ != 0, "Wrong keyHash");
+        require(token_ != address(0), "Wrong token address");
+        require(percentageWinner_ + percentageOwner_ == 100, "Wrong percentages!");
         _coordinator = VRFCoordinatorV2Interface(vrfCoordinator_);
         _subscriptionId = subscriptionId_;
         _vrfCoordinator = vrfCoordinator_;
         _keyHash = keyHash_;
-        lotteryCoin = IERC20(token);
-
-        lotteryState = LOTTERY_STATE.CLOSED;
+        _lotCoin = IERC20(token_);
+        _lotteryState = LOTTERY_STATE.CLOSED;
+        _percentageWinner = percentageWinner_;
+        _percentageOwner = percentageOwner_;
+        _ticketPrice = ticketPrice_ * 10**18;
     }
 
     /**
-     * NOTE: Start new lottery and allow players to buy tickets
+     * @notice Start new lottery and allow players to buy tickets
      * Only owner could call this function
-     * @dev The state of previous lottery is reset
+     * @dev The state of previous lottery is reseted
      */
     function startLottery() external onlyOwner {
-        require(lotteryState == LOTTERY_STATE.CLOSED, "Can't start a new lottery");
+        require(_lotteryState == LOTTERY_STATE.CLOSED, "Can't start a new lottery");
         _lotteryBalance = 0;
         _numberOfTicket = 0;
-        lotteryState = LOTTERY_STATE.OPEN;
+        _lotteryState = LOTTERY_STATE.OPEN;
         _lotteryId++;
         _randomWord = new uint256[](0);
+        emit NewLotteryStarted(_lotteryId);
     }
 
     /**
-     * NOTE: ticket price is based on 'LOT' ERC20 standard token
+     * @notice ticket price is based on 'LOT' ERC20 standard token
      * Every user could buy multiple tickets
      * @dev Each ticket is ERC721 token
-     * Initial price for one ticket is 50 'LOT' tokens and it's
-     * required to approve _ticketPrice amount of tokens for this contract
+     * It's required to approve _ticketPrice amount of tokens for this contract
      * in order to participate
      * NewParticipant event is emitted
      */
-    function participate() public {
-        require(lotteryState == LOTTERY_STATE.OPEN, "Wait until the next lottery");
-        require(lotteryCoin.allowance(msg.sender, address(this)) >= _ticketPrice, "Not enough of lottery tokens");
-        bool success = lotteryCoin.transferFrom(msg.sender, address(this), _ticketPrice);
-        if (success) {
-            _numberOfTicket++;
-            _userTickets[_numberOfTicket] = payable(msg.sender);
-            _lotteryBalance += _ticketPrice;
-            _safeMint(msg.sender, _numberOfTicket);
-            emit NewParticipant(msg.sender, _lotteryId);
-        }
+    function participate() external {
+        require(_lotteryState == LOTTERY_STATE.OPEN, "Wait until the next lottery");
+        require(_lotCoin.allowance(msg.sender, address(this)) >= _ticketPrice, "Not enough of lottery tokens");
+        bool success = _lotCoin.transferFrom(msg.sender, address(this), _ticketPrice);
+        require(success, "Fund transfer of lottery tokens failed");
+        _numberOfTicket++;
+        _userTickets[_numberOfTicket] = msg.sender;
+        _lotteryBalance += _ticketPrice;
+        _safeMint(msg.sender, _numberOfTicket);
+        emit NewParticipant(msg.sender, _lotteryId);
     }
 
     /**
-     * NOTE: End lottery function, which calculates the winner and pay the prize
+     * @notice End lottery function, which calculates the winner and pay the prize
      * Only owner could call this function
      * @dev endLottery() calls _pickWinner(), which in turn calls the
      * requestRandomWords function from VRFv2
      * At least one participant is required to call this function
      */
     function endLottery() external onlyOwner {
-        require(lotteryState == LOTTERY_STATE.OPEN, "Can't end lottery yet");
+        require(_lotteryState == LOTTERY_STATE.OPEN, "Can't end lottery yet");
         require(_numberOfTicket > 0, "Can't divide by zero");
-        lotteryState = LOTTERY_STATE.CALCULATING_WINNER;
+        require(_lotteryBalance >= 100, "Lottery balance is too small");
+        _lotteryState = LOTTERY_STATE.CALCULATING_WINNER;
         _pickWinner();
     }
 
     /**
-     * NOTE: Function to calculate the winner
+     * @notice Function to calculate the winner
      * Only owner could call this function
      * @dev Will revert if subscription is not set and funded
      * RequestRandomness event is emitted
      */
-    function _pickWinner() private onlyOwner {
-        require(lotteryState == LOTTERY_STATE.CALCULATING_WINNER, "Lottery not ended yet");
+    function _pickWinner() private {
+        require(_lotteryState == LOTTERY_STATE.CALCULATING_WINNER, "Lottery not ended yet");
         requestId = _coordinator.requestRandomWords(
             _keyHash,
             _subscriptionId,
@@ -143,8 +200,9 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     }
 
     /**
-     * NOTE: Get random number, pick winner and sent prize to winner
+     * @notice Get random number, pick winner and sent prize to winner
      * @dev Function can be fulfilled only from _vrfcoordinator
+     * ReceivedRandomness and LotteryEnded events are emitted
      * @param reqId requestId for generating random number
      * @param random received number from VRFv2
      */
@@ -156,18 +214,17 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
         require(_randomWord[0] > 0, "Random number not found");
         uint256 winnerTicket = (_randomWord[0] % _numberOfTicket) + 1;
         _lotteryWinners[_lotteryId] = _userTickets[winnerTicket];
-        lotteryState = LOTTERY_STATE.CLOSED;
-        bool success = lotteryCoin.transfer(_userTickets[winnerTicket], (_lotteryBalance * 90) / 100);
-        if (success) {
-            success = lotteryCoin.transfer(owner(), (_lotteryBalance * 10) / 100);
-            if (success) {
-                emit ReceivedRandomness(reqId, random[0]);
-            }
-        }
+        bool success = _lotCoin.transfer(_userTickets[winnerTicket], (_lotteryBalance * _percentageWinner) / 100);
+        require(success, "Transfer of funds to the winner ended in failure");
+        success = _lotCoin.transfer(owner(), (_lotteryBalance * _percentageOwner) / 100);
+        require(success, "Transfer of funds to the owner ended in failure");
+        _lotteryState = LOTTERY_STATE.CLOSED;
+        emit ReceivedRandomness(reqId, random[0]);
+        emit LotteryEnded(_lotteryId, _userTickets[winnerTicket]);
     }
 
     /**
-     * NOTE: Update _subscriptionId
+     * @notice Update _subscriptionId
      * @dev SubscriptionChanged event emitted
      * @param newSubscriptionId new _subscriptionId
      */
@@ -177,38 +234,58 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     }
 
     /**
-     * NOTE: Update Participation Fee
+     * @notice Update Participation Fee
      * @dev ParticipationFeeUpdated event emitted
-     * @param newTicketPrice new price of ticket
+     * @param newTicketPrice new price of ticket in 'LOT' tokens
      */
     function updateTicketPrice(uint64 newTicketPrice) external onlyOwner {
-        _ticketPrice = newTicketPrice;
-        emit ParticipationFeeUpdated(newTicketPrice);
+        _ticketPrice = newTicketPrice * 10**18;
+        emit ParticipationFeeUpdated(_ticketPrice);
     }
 
     /**
-     * @dev Getter for lottery balance of current lottery
+     * @notice Update the percentages of the total balance paid for the winner and owner
+     * PercentagesChanged event is emitted
+     * @param percentageWinner_ new percentage for the winner
+     * @param percentageOwner_ new percentage for the owner
+     */
+    function updatePercentages(uint256 percentageWinner_, uint256 percentageOwner_) external onlyOwner {
+        require(percentageWinner_ + percentageOwner_ == 100, "Wrong percentages!");
+        _percentageWinner = percentageWinner_;
+        _percentageOwner = percentageOwner_;
+        emit PercentagesChanged(_percentageWinner, _percentageOwner);
+    }
+
+    /**
+     * @dev Returns the percentage of the total balance paid for the winner and owner
+     */
+    function getPercentages() external view returns (uint256, uint256) {
+        return (_percentageWinner, _percentageOwner);
+    }
+
+    /**
+     * @dev Returns lottery balance of current lottery
      */
     function getLotteryBalance() external view returns (uint256) {
         return _lotteryBalance;
     }
 
     /**
-     * @dev Getter for subscription Id
+     * @dev Returns subscription Id
      */
-    function getSubscriptionId() external view onlyOwner returns (uint64) {
+    function getSubscriptionId() external view returns (uint64) {
         return _subscriptionId;
     }
 
     /**
-     * @dev Getter for current ticket price
+     * @dev Returns current ticket price
      */
     function getTicketPrice() external view returns (uint256) {
         return _ticketPrice;
     }
 
     /**
-     * @dev Getter for address of the ticket owner
+     * @dev Returns address of the ticket owner
      * @param userTicket_ number of ticket in actual lottery
      */
     function getUserFromTicket(uint256 userTicket_) external view returns (address) {
@@ -216,7 +293,7 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     }
 
     /**
-     * @dev Getter for the winner's address for a specific lottery
+     * @dev Returns the winner's address for a specific lottery
      * @param lotteryId_ number of lottery
      */
     function getlotteryWinner(uint256 lotteryId_) external view returns (address) {
@@ -224,35 +301,35 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     }
 
     /**
-     * @dev Getter for number of tickets from current lottery
+     * @dev Returns number of tickets from current lottery
      */
     function currentNumberOfTickets() external view returns (uint256) {
         return _numberOfTicket;
     }
 
     /**
-     * @dev Getter for current lottery state
+     * @dev Returns current lottery state
      */
     function currentLotteryState() external view returns (LOTTERY_STATE) {
-        return lotteryState;
+        return _lotteryState;
     }
 
     /**
-     * @dev Getter for current lottery ID
+     * @dev Returns current lottery ID
      */
     function currentLotteryId() external view returns (uint256) {
         return _lotteryId;
     }
 
     /**
-     * @dev Getter for current Random Word
+     * @dev Returns current Random Word
      */
     function currentRandomWord() external view returns (uint256[] memory) {
         return _randomWord;
     }
 
     /**
-     * @dev Getter for length of _randomWord array
+     * @dev Returns length of _randomWord array
      */
     function getLength() external view returns (uint256) {
         return _randomWord.length;
