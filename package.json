@@ -1,57 +1,59 @@
 {
-  "name": "lottery",
-  "version": "1.0.0",
-  "description": "Lottery contract with VRF2 . Contract use VRFv2 for generating random numbers. Therefore, for the correct operation of the contract, it is necessary to create subscription on > https://vrf.chain.link/rinkeby for Rinkeby testnet and https://vrf.chain.link/mainnet for mainnet, replenish the balance of LINK and add contract address as a consumer",
-  "keywords": [
-    "lottery",
-    "ERC20",
-    "ERC721",
-    "NFT"
-  ],
-  "author": "Ivan Lieskov",
-  "license": "ISC",
-  "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.6",
-    "@nomiclabs/hardhat-solhint": "^2.0.1",
-    "@nomiclabs/hardhat-waffle": "^2.0.3",
-    "chai": "^4.3.6",
-    "ethereum-waffle": "^3.4.4",
-    "ethers": "^5.6.9",
-    "hardhat": "^2.9.9",
-    "prettier": "^2.7.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.19"
-  },
-  "dependencies": {
-    "@chainlink/contracts": "^0.4.1",
-    "@nomiclabs/hardhat-etherscan": "^3.1.0",
-    "@openzeppelin/contracts": "^4.7.0",
-    "dotenv": "^16.0.1",
-    "solidity-coverage": "^0.7.21",
-    "solidity-docgen": "^0.6.0-beta.21"
-  },
-  "main": "hardhat.config.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "npx hardhat test",
-    "deployLOT": "npx hardhat run --network rinkeby scripts/token.js",
-    "deployLottery": "npx hardhat run --network rinkeby scripts/lottery.js",
-    "verifyLOT": "npx hardhat verify --network rinkeby --contract contracts/Token.sol:LOTcoin [Token.sol address]",
-    "verifyLottery": "npx hardhat verify --network rinkeby --contract contracts/Lottery.sol:Lottery --constructor-args arguments.js [Lottery.sol address]",
-    "docgen": "npx hardhat docgen",
-    "slither": "slither .",
-    "solhint": "solhint 'contracts/**/*.sol'",
-    "coverage": "npx hardhat coverage --testfiles test",
-    "flatt": "npx hardhat flatten > Lottery.sol",
-    "prettier": "prettier --write 'contracts/Lottery.sol'"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ILESKOV/Lottery1000Geeks.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ILESKOV/Lottery1000Geeks/issues"
-  },
-  "homepage": "https://github.com/ILESKOV/Lottery1000Geeks#readme"
+    "name": "lottery",
+    "version": "1.0.0",
+    "description": "Lottery contract with VRF2 . Contract use VRFv2 for generating random numbers. Therefore, for the correct operation of the contract, it is necessary to create subscription on > https://vrf.chain.link/rinkeby for Rinkeby testnet and https://vrf.chain.link/mainnet for mainnet, replenish the balance of LINK and add contract address as a consumer",
+    "keywords": [
+        "lottery",
+        "ERC20",
+        "ERC721",
+        "NFT"
+    ],
+    "author": "Ivan Lieskov",
+    "license": "ISC",
+    "devDependencies": {
+        "@nomiclabs/hardhat-ethers": "^2.0.6",
+        "@nomiclabs/hardhat-solhint": "^2.0.1",
+        "@nomiclabs/hardhat-waffle": "^2.0.3",
+        "chai": "^4.3.6",
+        "ethereum-waffle": "^3.4.4",
+        "ethers": "^5.6.9",
+        "hardhat": "^2.9.9",
+        "prettier": "^2.7.1",
+        "prettier-plugin-solidity": "^1.0.0-beta.19"
+    },
+    "dependencies": {
+        "@chainlink/contracts": "^0.4.1",
+        "@nomiclabs/hardhat-etherscan": "^3.1.0",
+        "@openzeppelin/contracts": "^4.7.0",
+        "dotenv": "^16.0.1",
+        "solidity-coverage": "^0.7.21",
+        "solidity-docgen": "^0.6.0-beta.21"
+    },
+    "main": "hardhat.config.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "npx hardhat test",
+        "deployRinkeby": "npx hardhat run --network rinkeby scripts/index.js",
+        "deployMainnet": "npx hardhat run --network ethereum scripts/index.js",
+        "verifyRinkebyLOT": "npx hardhat verify --network rinkeby --contract contracts/Token.sol:LOTcoin [Token.sol address]",
+        "verifyRinkebyLottery": "npx hardhat verify --network rinkeby --contract contracts/Lottery.sol:Lottery --constructor-args arguments.js [Lottery.sol address]",
+        "verifyLOT": "npx hardhat verify --network ethereum --contract contracts/Token.sol:LOTcoin [Token.sol address]",
+        "verifyLottery": "npx hardhat verify --network ethereum --contract contracts/Lottery.sol:Lottery --constructor-args arguments.js [Lottery.sol address]",
+        "docgen": "npx hardhat docgen",
+        "slither": "slither .",
+        "solhint": "solhint 'contracts/**/*.sol'",
+        "coverage": "npx hardhat coverage --testfiles test",
+        "flatt": "npx hardhat flatten > Lottery.sol",
+        "prettier": "prettier --write 'contracts/Lottery.sol'"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ILESKOV/Lottery1000Geeks.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ILESKOV/Lottery1000Geeks/issues"
+    },
+    "homepage": "https://github.com/ILESKOV/Lottery1000Geeks#readme"
 }
