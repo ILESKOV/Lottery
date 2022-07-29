@@ -43,13 +43,21 @@ $ npm install
 ### 3. .env environment variables required to set up
 
 ### 4. Run Tests
-```$ npm run test```
+```
+$ npm run test
+```
 
-```$ npm run coverage```
+```
+$ npm run coverage
+```
 
 ### 5. Deploy to Rinkeby or Mainnet
-```$ npm run deployRinkeby ``` 
-```$ npm run deployMainnet ``` 
+```
+$ npm run deployRinkeby
+``` 
+```
+$ npm run deployMainnet 
+``` 
 
 !!!Important!!! 
 insert current token contract address into your environment variables
@@ -58,13 +66,17 @@ insert current token contract address into your environment variables
 ![Example screenshot](./helpers/Screenshot7.png)
 
 ### 7. Verify contracts
-```$ npm run verifyRinkebyLOT ```
+```
+$ npm run verifyRinkebyLOT 
+```
 
 ```
  $ npm run verifyRinkebyLottery
 ```
 or for mainnet
-```$ npm run verifyLOT ```
+```
+$ npm run verifyLOT
+```
 
 ```
  $ npm run verifyLottery
