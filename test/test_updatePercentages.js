@@ -54,3 +54,4 @@ describe("updatePercentages", function () {
         })
     })
 })
+
