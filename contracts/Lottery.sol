@@ -156,7 +156,6 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
      */
     function participate() external {
         require(_lotteryState == LOTTERY_STATE.OPEN, "Wait until the next lottery");
-        require(_lotCoin.allowance(msg.sender, address(this)) >= _ticketPrice, "Not enough of lottery tokens");
         bool success = _lotCoin.transferFrom(msg.sender, address(this), _ticketPrice);
         require(success, "Fund transfer of lottery tokens failed");
         _numberOfTicket++;
