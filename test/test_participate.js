@@ -41,7 +41,7 @@ describe("participation logic", function () {
             await Lottery.startLottery()
             await LOT.transfer(player1.address, BigNumber.from("500000000000000000000"))
             await LOT.connect(player1).approve(Lottery.address, BigNumber.from("49000000000000000000"))
-            await expect(Lottery.connect(player1).participate()).to.be.revertedWith("Not enough of lottery tokens")
+            await expect(Lottery.connect(player1).participate()).to.be.revertedWith("ERC20: insufficient allowance")
         })
     })
 
