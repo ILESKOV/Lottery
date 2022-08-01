@@ -16,15 +16,15 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * @dev Lottery ticket is ERC721 token standard and could be bought with LOT ERC-20 tokens
  */
 contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
-    VRFCoordinatorV2Interface private _coordinator;
-    IERC20 private _lotCoin;
 
     enum LOTTERY_STATE {
         OPEN,
         CLOSED,
         CALCULATING_WINNER
     }
-
+    
+    VRFCoordinatorV2Interface private _coordinator;
+    IERC20 private _lotCoin;
     LOTTERY_STATE private _lotteryState;
     address private _vrfCoordinator;
     bytes32 private _keyHash;
