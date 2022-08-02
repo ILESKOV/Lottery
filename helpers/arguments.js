@@ -4,3 +4,4 @@ module.exports = [
   process.env.KEY_HASH,
   process.env.LOT_ADDRESS,
 ];
+
