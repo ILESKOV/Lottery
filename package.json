@@ -35,8 +35,8 @@
     },
     "scripts": {
         "test": "npx hardhat test",
-        "deployRinkeby": "npx hardhat run --network rinkeby scripts/index.js",
-        "deployMainnet": "npx hardhat run --network ethereum scripts/index.js",
+        "deployRinkeby": "npx hardhat run --network rinkeby scripts/deploy.js",
+        "deployMainnet": "npx hardhat run --network ethereum scripts/deploy.js",
         "verifyRinkebyLOT": "npx hardhat verify --network rinkeby --contract contracts/Token.sol:LOTcoin [Token.sol address]",
         "verifyRinkebyLottery": "npx hardhat verify --network rinkeby --contract contracts/Lottery.sol:Lottery --constructor-args helpers/arguments.js [Lottery.sol address]",
         "verifyLOT": "npx hardhat verify --network ethereum --contract contracts/Token.sol:LOTcoin [Token.sol address]",
