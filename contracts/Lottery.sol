@@ -87,12 +87,12 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     /**
      * @dev Emitted when a new participation fee is established
      */
-    event ParticipationFeeUpdated(uint256 indexed usdParticipationFee);
+    event ParticipationFeeUpdated(uint256 usdParticipationFee);
 
     /**
      * @dev Emitted when a new participant appears
      */
-    event NewParticipant(address indexed participant, uint256 indexed lotteryId);
+    event NewParticipant(address indexed participant, uint256 lotteryId);
 
     /**
      * @dev vrfCoordinator_ and keyHash_ can be obtained
