@@ -1,4 +1,4 @@
-# &#127149;&#127137; Lottery &#127153;&#127183;
+# &#127183; Lottery &#127183;
 > Lottery contract with VRF2
 > Contract is using VRFv2 for generating random numbers. Therefore, for the correct operation of the contract, it is necessary to create subscription on > https://vrf.chain.link/rinkeby for rinkeby testnet or https://vrf.chain.link/mainnet for mainnet, replenish the balance of LINK and add contract address as a consumer
 
