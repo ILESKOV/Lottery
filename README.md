@@ -12,7 +12,7 @@
 
 
 
-## 🚩 General Information
+🚩## General Information
 - Owner(admin) of the contract can start/end lottery
 - Every user can participate and price of ticket is based on LOT ERC20 tokens. Each ticket represents itself an ERC721 token
 - After owner end lottery, the winner will be picked using randomness from Chainlink VRFv2 Coordinator
