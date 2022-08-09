@@ -3,7 +3,7 @@
 > Contract is using VRFv2 for generating random numbers. Therefore, for the correct operation of the contract, it is necessary to create subscription on > https://vrf.chain.link/rinkeby for rinkeby testnet or https://vrf.chain.link/mainnet for mainnet, replenish the balance of LINK and add contract address as a consumer
 
 ## 📁 Table of Contents
-* [General Info](#general-information)
+* [General Info](#🚩-general-information)
 * [Technologies Used](#technologies-used)
 * [Features](#features)
 * [Requirements For Initial Setup](#requirements)
@@ -12,7 +12,7 @@
 
 
 
-🚩## General Information
+## 🚩 General Information
 - Owner(admin) of the contract can start/end lottery
 - Every user can participate and price of ticket is based on LOT ERC20 tokens. Each ticket represents itself an ERC721 token
 - After owner end lottery, the winner will be picked using randomness from Chainlink VRFv2 Coordinator
