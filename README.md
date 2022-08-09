@@ -4,11 +4,11 @@
 
 ## 📁 Table of Contents
 * [General Info](#🚩-general-information)
-* [Technologies Used](#technologies-used)
-* [Features](#features)
-* [Requirements For Initial Setup](#requirements)
-* [Setup](#setup)
-* [Contact](#contact)
+* [Technologies Used](#💻-technologies-used)
+* [Features](#🌟-features)
+* [Requirements For Initial Setup](#👀-requirements-for-initial-setup)
+* [Setup](#📟-setup)
+* [Contact](#💬-contact)
 
 
 
