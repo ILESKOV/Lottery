@@ -3,12 +3,12 @@
 > Contract is using VRFv2 for generating random numbers. Therefore, for the correct operation of the contract, it is necessary to create subscription on > https://vrf.chain.link/rinkeby for rinkeby testnet or https://vrf.chain.link/mainnet for mainnet, replenish the balance of LINK and add contract address as a consumer
 
 ## 📁 Table of Contents
-* [General Info](#🚩-general-information)
-* [Technologies Used](#💻-technologies-used)
-* [Features](#🌟-features)
-* [Requirements For Initial Setup](#👀-requirements-for-initial-setup)
-* [Setup](#📟-setup)
-* [Contact](#💬-contact)
+* [General Info](#-general-information)
+* [Technologies Used](#-technologies-used)
+* [Features](#-features)
+* [Requirements For Initial Setup](#-requirements-for-initial-setup)
+* [Setup](#-setup)
+* [Contact](#-contact)
 
 
 
