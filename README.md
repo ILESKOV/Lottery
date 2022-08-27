@@ -48,6 +48,17 @@ Create .env file inside project folder
 - Key Hash and address of vrf coordinator can be obtained from here [here](https://docs.chain.link/docs/vrf-contracts) Just choose network and copy:)
 - You can get your etherscan API -key [here](https://etherscan.io/myapikey).
 - LOT_ADDRESS be available after deploying contracts
+```
+RINKEBY_API = https://rinkeby.infura.io/v3/a7a7a7a77a7a7a7a7a7a7a7a77a7a7a7
+MAINNET_API = https://mainnet.infura.io/v3/a7a7a7a77a7a7a7a7a7a7a7a77a7a7a7
+PRIVATE_KEY = x5x5x5x55x5x5x5x5x5x5x55x5x5x5x5x5x5x55x5x5x5x55x5x5x5x5x55x5x5x
+ETHERSCAN_KEY = SCBXJFBXXXXXX77777XXXXX7777XX
+SUBSCRIPTION_ID = 1111
+KEY_HASH = 0xdhfhs777474747777x7x7x7x7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x
+AGGREGATOR = 0xx7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x7x7x7x77x7x7
+VRF_COORDINATOR = 0xx7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x7x7x7x77x7x7
+LOT_ADDRESS = 0xx7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x7x7x7x77x7x7
+```
 ![Example screenshot](./helpers/Screenshot8.png)
 
 ### 4. ⚠️ Run Tests
