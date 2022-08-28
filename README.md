@@ -58,6 +58,9 @@ KEY_HASH = <Key Hash>
 AGGREGATOR = <Aggregator address(depends on network)>
 VRF_COORDINATOR = <VRF coordinator address(depends on network)>
 LOT_ADDRESS = <Address of deployed LOT.sol contract>
+PERCENT_WINNER = <Percent of total collected funds of lottery winner will receive(PERCENT_WINNER+PERCENT_OWNER must be 100)>
+PERCENT_OWNER = <Percent of total collected funds of lottery winner will receive(PERCENT_WINNER+PERCENT_OWNER must be 100)>
+TICKET_PRICE = <Price in LOT tokens in order to participate in Lottery>
 ```
 ![Example screenshot](./helpers/Screenshot8.png)
 
