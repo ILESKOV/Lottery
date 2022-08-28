@@ -49,15 +49,15 @@ Create .env file inside project folder
 - You can get your etherscan API -key [here](https://etherscan.io/myapikey).
 - LOT_ADDRESS be available after deploying contracts
 ```
-RINKEBY_API = https://rinkeby.infura.io/v3/a7a7a7a77a7a7a7a7a7a7a7a77a7a7a7
-MAINNET_API = https://mainnet.infura.io/v3/a7a7a7a77a7a7a7a7a7a7a7a77a7a7a7
-PRIVATE_KEY = x5x5x5x55x5x5x5x5x5x5x55x5x5x5x5x5x5x55x5x5x5x55x5x5x5x5x55x5x5x
-ETHERSCAN_KEY = SCBXJFBXXXXXX77777XXXXX7777XX
-SUBSCRIPTION_ID = 1111
-KEY_HASH = 0xdhfhs777474747777x7x7x7x7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x
-AGGREGATOR = 0xx7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x7x7x7x77x7x7
-VRF_COORDINATOR = 0xx7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x7x7x7x77x7x7
-LOT_ADDRESS = 0xx7x7x77x7x7x7x7x77x7x7x7x7x77x7x7x7x7x7x77x7x7
+RINKEBY_API = <Rinkeby API key>
+MAINNET_API = <Ethereum mainnet API key>
+PRIVATE_KEY = <Private key of your wallet u want to deploy contracts from>
+ETHERSCAN_KEY = <Etherscan API key in order to verify your contracts>
+SUBSCRIPTION_ID = <VRFv2 subcription id>
+KEY_HASH = <Key Hash>
+AGGREGATOR = <Aggregator address(depends on network)>
+VRF_COORDINATOR = <VRF coordinator address(depends on network)>
+LOT_ADDRESS = <Address of deployed LOT.sol contract>
 ```
 ![Example screenshot](./helpers/Screenshot8.png)
 
