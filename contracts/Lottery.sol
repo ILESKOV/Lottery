@@ -42,7 +42,9 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
 
     uint256[] private _randomWord;
 
+    // Mapping from number of ticket to participant.
     mapping(uint256 => address) private _userTickets;
+    // Mapping from number of lottery to lottery winner.    
     mapping(uint256 => address) private _lotteryWinners;
 
     /**
