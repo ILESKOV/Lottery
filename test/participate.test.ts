@@ -50,7 +50,7 @@ beforeEach(async () => {
         50
     )
 })
-describe("participation logic", function () {
+describe("participate() tests", function () {
     describe("negative tests", function () {
         it("should revert if lottery is 'CLOSED", async () => {
             await LOT.transfer(player1Wallet, BigNumber.from("500000000000000000000"))
