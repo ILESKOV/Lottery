@@ -12,6 +12,16 @@ constructor() public
 
 _Lottery ticket is ERC721 token standard and could be bought with LOT ERC-20 tokens_
 
+### LOTTERY_STATE
+
+```solidity
+enum LOTTERY_STATE {
+  OPEN,
+  CLOSED,
+  CALCULATING_WINNER
+}
+```
+
 ### _coordinator
 
 ```solidity
@@ -22,16 +32,6 @@ contract VRFCoordinatorV2Interface _coordinator
 
 ```solidity
 contract IERC20 _lotCoin
-```
-
-### LOTTERY_STATE
-
-```solidity
-enum LOTTERY_STATE {
-  OPEN,
-  CLOSED,
-  CALCULATING_WINNER
-}
 ```
 
 ### _lotteryState
@@ -231,7 +231,15 @@ constructor(uint64 subscriptionId_, address vrfCoordinator_, bytes32 keyHash_, a
 ```
 
 _vrfCoordinator_ and keyHash_ can be obtained
-from here: https://docs.chain.link/docs/vrf-contracts/_
+from here: https://docs.chain.link/docs/vrf-contracts/
+
+Requirements:
+
+- `subscriptionId_` cannot be zero.
+- `keyHash_` cannot be address zero.
+- `vrfCoordinator_` cannot be address zero.
+- `token_` cannot be address zero.
+- The sum of `percentageWinner_` and `percentageOwner_` must be 100(percent)._
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
@@ -252,7 +260,13 @@ function startLottery() external
 Start new lottery and allow players to buy tickets
 Only owner could call this function
 
-_The state of previous lottery is reset_
+_The state of previous lottery is reseted
+
+Requirements:
+
+- `_lotteryState` must be in `CLOSED` state.
+
+Emits a {NewLotteryStarted} event._
 
 ### participate
 
@@ -264,9 +278,14 @@ ticket price is based on 'LOT' ERC20 standard token
 Every user could buy multiple tickets
 
 _Each ticket is ERC721 token
-It's required to approve _ticketPrice amount of tokens for this contract
-in order to participate
-NewParticipant event is emitted_
+
+Requirements:
+
+- It's required to approve _ticketPrice amount of tokens for this contract
+in order to participate.
+- `_lotteryState` must be in `OPEN` state.
+
+Emits a {NewParticipant} event._
 
 ### endLottery
 
@@ -279,7 +298,14 @@ Only owner could call this function
 
 _endLottery() calls _pickWinner(), which in turn calls the
 requestRandomWords function from VRFv2
-At least one participant is required to call this function_
+
+Requirements:
+
+- At least one participant is required to allow owner call this function.
+- `_lotteryState` must be in `OPEN` state.
+- `_lotteryBalance` must be equal to or greater than 100 tokens.
+
+Emits a {RequestedRandomness} event._
 
 ### _pickWinner
 
@@ -291,51 +317,23 @@ Function to calculate the winner
 Only owner could call this function
 
 _Will revert if subscription is not set and funded
-RequestRandomness event is emitted_
+
+Emits a {RequestedRandomness} event._
 
 ### fulfillRandomWords
 
 ```solidity
-function fulfillRandomWords(uint256 reqId, uint256[] random) internal
+function fulfillRandomWords(uint256 reqId_, uint256[] random_) internal
 ```
 
 Get random number, pick winner and sent prize to winner
 
-_Function can be fulfilled only from _vrfcoordinator
-ReceivedRandomness and LotteryEnded events are emitted_
+_Function can be fulfilled only from _vrfcoordinator_
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| reqId | uint256 | requestId for generating random number |
-| random | uint256[] | received number from VRFv2 |
-
-### updateSubscriptionId
-
-```solidity
-function updateSubscriptionId(uint64 newSubscriptionId) external
-```
-
-Update _subscriptionId
-
-_SubscriptionChanged event emitted_
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| newSubscriptionId | uint64 | new _subscriptionId |
-
-### updateTicketPrice
-
-```solidity
-function updateTicketPrice(uint64 newTicketPrice) external
-```
-
-Update Participation Fee
-
-_ParticipationFeeUpdated event emitted_
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| newTicketPrice | uint64 | new price of ticket in 'LOT' tokens |
+| reqId_ | uint256 | requestId for generating random number |
+| random_ | uint256[] | received number from VRFv2 Requirements: - The first random word must be higher than zero. Emits a {ReceivedRandomness} event. Emits a {LotteryEnded} event. |
 
 ### updatePercentages
 
@@ -344,12 +342,39 @@ function updatePercentages(uint256 percentageWinner_, uint256 percentageOwner_) 
 ```
 
 Update the percentages of the total balance paid for the winner and owner
-PercentagesChanged event is emitted
+
+Requirements:
+
+- The sum of `percentageWinner_` and `percentageOwner_` must be 100(percent).
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | percentageWinner_ | uint256 | new percentage for the winner |
-| percentageOwner_ | uint256 | new percentage for the owner |
+| percentageOwner_ | uint256 | new percentage for the owner Emits a {PercentagesChanged} event. |
+
+### updateSubscriptionId
+
+```solidity
+function updateSubscriptionId(uint64 newSubscriptionId_) external
+```
+
+Update _subscriptionId
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| newSubscriptionId_ | uint64 | new _subscriptionId Emits a {SubscriptionChanged} event. |
+
+### updateTicketPrice
+
+```solidity
+function updateTicketPrice(uint64 newTicketPrice_) external
+```
+
+Update Participation Fee
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| newTicketPrice_ | uint64 | new price of ticket in 'LOT' tokens Emits a {ParticipationFeeUpdated} event. |
 
 ### getPercentages
 
