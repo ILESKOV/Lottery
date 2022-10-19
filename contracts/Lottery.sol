@@ -258,17 +258,6 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     }
 
     /**
-     * @notice Update _subscriptionId
-     * @param newSubscriptionId_ new _subscriptionId
-     *
-     * Emits a {SubscriptionChanged} event.
-     */
-    function updateSubscriptionId(uint64 newSubscriptionId_) external onlyOwner {
-        _subscriptionId = newSubscriptionId_;
-        emit SubscriptionChanged(_subscriptionId);
-    }
-
-    /**
      * @notice Update the percentages of the total balance paid for the winner and owner
      *
      * Requirements:
@@ -285,6 +274,17 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
         _percentageWinner = percentageWinner_;
         _percentageOwner = percentageOwner_;
         emit PercentagesChanged(_percentageWinner, _percentageOwner);
+    }
+
+    /**
+     * @notice Update _subscriptionId
+     * @param newSubscriptionId_ new _subscriptionId
+     *
+     * Emits a {SubscriptionChanged} event.
+     */
+    function updateSubscriptionId(uint64 newSubscriptionId_) external onlyOwner {
+        _subscriptionId = newSubscriptionId_;
+        emit SubscriptionChanged(_subscriptionId);
     }
 
     /**
