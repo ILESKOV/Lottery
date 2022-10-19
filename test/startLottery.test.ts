@@ -51,7 +51,7 @@ beforeEach(async () => {
     )
 })
 
-describe("After lottery started", function () {
+describe("startLottery() tests", function () {
     describe("negative tests", function () {
         it("should not allow start new lottery while lottery is already started", async () => {
             await Lottery.startLottery()
