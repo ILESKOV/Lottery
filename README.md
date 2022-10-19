@@ -73,38 +73,18 @@ $ npm run test
 $ npm run coverage
 ```
 
-### 5. 🚀 Deploy to Rinkeby or Mainnet
+### 5. 🚀 Deploy to GORELI or Mainnet
 ```
-$ npm run deployRinkeby
+$ npm run deploy:goerli
 ``` 
 ```
-$ npm run deployMainnet 
+$ npm run deploy:polygon
 ``` 
-
-!!!Important!!! 
-insert current token contract address into your environment variables
-
-### 6. ✏️ Insert current contract addresses into package.json
-![Example screenshot](./helpers/Screenshot7.png)
-
-### 7. 📜 Verify contracts
 ```
-$ npm run verifyRinkebyLOT 
-```
-
-```
- $ npm run verifyRinkebyLottery
-```
-or for mainnet
-```
-$ npm run verifyLOT
-```
-
-```
- $ npm run verifyLottery
-```
-
-
+$ npm run deploy:mainnet
+``` 
+### Note:
+deploy.ts implements the verification script and you don't need to complete any additional steps in order to verify the contract.
 
 
 ## 💬 Contact
