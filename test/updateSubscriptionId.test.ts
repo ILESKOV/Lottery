@@ -50,7 +50,7 @@ beforeEach(async () => {
         50
     )
 })
-describe("updateSubscriptionId tests", function () {
+describe("updateSubscriptionId() test", function () {
     it("Successfully updates subscription Id", async () => {
         expect(await Lottery.getSubscriptionId()).to.equal(1)
         await expect(Lottery.updateSubscriptionId(2)).to.emit(Lottery, "SubscriptionChanged").withArgs(2)
