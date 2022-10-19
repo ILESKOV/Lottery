@@ -40,6 +40,10 @@
 $ cd lottery_file
 $ npm install
 ```
+The line below is required to be installed in order to pass all tests.
+```
+$ npm i --save-dev @chainlink/contracts@0.4.1
+```
 ### 3. 🔍  .env environment variables required to set up
 Create .env file inside project folder
 - You can get your ethereum or testnet API key [here](https://infura.io/dashboard/ethereum),[here](https://www.alchemy.com) or any other service that allow you to connect to the nodes
