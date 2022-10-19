@@ -1,0 +1,10 @@
+describe("Lottery", function () {
+    require("./startLottery.test")
+    require("./participate.test")
+    require("./endLottery.test")
+    require("./fulfillRandomWords.test")
+    require("./VRFv2.test")
+    require("./updatePercentages.test")
+    require("./updateSubscriptionId.test")
+    require("./updateTicketPrice.test")
+})
