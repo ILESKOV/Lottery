@@ -54,7 +54,7 @@ beforeEach(async () => {
     await LOT.transfer(player1Wallet, BigNumber.from("500000000000000000000"))
     await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
 })
-describe("fulfillRandomWords", function () {
+describe("fulfillRandomWords() tests", function () {
     it("check random word was created", async () => {
         await Lottery.connect(player1).participate()
         await Lottery.endLottery()
