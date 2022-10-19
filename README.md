@@ -49,7 +49,7 @@ Create .env file inside project folder
 - You can get your etherscan API -key [here](https://etherscan.io/myapikey).
 - LOT_ADDRESS be available after deploying contracts
 ```
-RINKEBY_API = <Rinkeby API key>
+GOERLI_API = <Goerli API key>
 MAINNET_API = <Ethereum mainnet API key>
 PRIVATE_KEY = <Private key of your wallet u want to deploy contracts from>
 ETHERSCAN_KEY = <Etherscan API key in order to verify your contracts>
@@ -57,7 +57,6 @@ SUBSCRIPTION_ID = <VRFv2 subcription id>
 KEY_HASH = <Key Hash>
 AGGREGATOR = <Aggregator address(depends on network)>
 VRF_COORDINATOR = <VRF coordinator address(depends on network)>
-LOT_ADDRESS = <Address of deployed LOT.sol contract>
 PERCENT_WINNER = <Percent of total collected funds of lottery winner will receive(PERCENT_WINNER+PERCENT_OWNER must be 100)>
 PERCENT_OWNER = <Percent of total collected funds of lottery winner will receive(PERCENT_WINNER+PERCENT_OWNER must be 100)>
 TICKET_PRICE = <Price in LOT tokens in order to participate in Lottery>
