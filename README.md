@@ -1,6 +1,6 @@
 # ♠ Lottery ♣
 > Lottery contract with VRF2
-> Contract is using VRFv2 for generating random numbers. Therefore, for the correct operation of the contract, it is necessary to create subscription on > https://vrf.chain.link/rinkeby for rinkeby testnet or https://vrf.chain.link/mainnet for mainnet, replenish the balance of LINK and add contract address as a consumer
+> Contract is using VRFv2 for generating random numbers. Therefore, for the correct operation of the contract, it is necessary to create subscription on > https://vrf.chain.link/goerli for rinkeby testnet or https://vrf.chain.link/mainnet for mainnet, replenish the balance of LINK and add contract address as a consumer
 
 ## 📁 Table of Contents
 * [General Info](#-general-information)
@@ -49,7 +49,7 @@ Create .env file inside project folder
 - You can get your etherscan API -key [here](https://etherscan.io/myapikey).
 - LOT_ADDRESS be available after deploying contracts
 ```
-RINKEBY_API = <Rinkeby API key>
+GOERLI_API = <Goerli API key>
 MAINNET_API = <Ethereum mainnet API key>
 PRIVATE_KEY = <Private key of your wallet u want to deploy contracts from>
 ETHERSCAN_KEY = <Etherscan API key in order to verify your contracts>
@@ -57,7 +57,6 @@ SUBSCRIPTION_ID = <VRFv2 subcription id>
 KEY_HASH = <Key Hash>
 AGGREGATOR = <Aggregator address(depends on network)>
 VRF_COORDINATOR = <VRF coordinator address(depends on network)>
-LOT_ADDRESS = <Address of deployed LOT.sol contract>
 PERCENT_WINNER = <Percent of total collected funds of lottery winner will receive(PERCENT_WINNER+PERCENT_OWNER must be 100)>
 PERCENT_OWNER = <Percent of total collected funds of lottery winner will receive(PERCENT_WINNER+PERCENT_OWNER must be 100)>
 TICKET_PRICE = <Price in LOT tokens in order to participate in Lottery>
@@ -73,38 +72,18 @@ $ npm run test
 $ npm run coverage
 ```
 
-### 5. 🚀 Deploy to Rinkeby or Mainnet
+### 5. 🚀 Deploy to GORELI or Mainnet
 ```
-$ npm run deployRinkeby
+$ npm run deploy:goerli
 ``` 
 ```
-$ npm run deployMainnet 
+$ npm run deploy:polygon
 ``` 
-
-!!!Important!!! 
-insert current token contract address into your environment variables
-
-### 6. ✏️ Insert current contract addresses into package.json
-![Example screenshot](./helpers/Screenshot7.png)
-
-### 7. 📜 Verify contracts
 ```
-$ npm run verifyRinkebyLOT 
-```
-
-```
- $ npm run verifyRinkebyLottery
-```
-or for mainnet
-```
-$ npm run verifyLOT
-```
-
-```
- $ npm run verifyLottery
-```
-
-
+$ npm run deploy:mainnet
+``` 
+### Note:
+deploy.ts implements the verification script and you don't need to complete any additional steps in order to verify the contract.
 
 
 ## 💬 Contact
