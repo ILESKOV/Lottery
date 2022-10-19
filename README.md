@@ -65,7 +65,7 @@ PERCENT_WINNER = <Percent of total collected funds of lottery winner will receiv
 PERCENT_OWNER = <Percent of total collected funds of lottery winner will receive(PERCENT_WINNER+PERCENT_OWNER must be 100)>
 TICKET_PRICE = <Price in LOT tokens in order to participate in Lottery>
 ```
-![Example screenshot](./helpers/Screenshot8.png)
+<!--![Example screenshot](./helpers/Screenshot8.png)-->
 
 ### 4. ⚠️ Run Tests
 ```
