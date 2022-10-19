@@ -49,6 +49,8 @@ beforeEach(async () => {
         10,
         50
     )
+    const subscriptionId = await Lottery.getSubscriptionId()
+    await VrfCoordinatorV2Mock.addConsumer(subscriptionId, Lottery.address)
 })
 describe("participate() tests", function () {
     describe("negative tests", function () {
