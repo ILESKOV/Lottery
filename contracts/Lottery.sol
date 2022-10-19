@@ -16,13 +16,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * @dev Lottery ticket is ERC721 token standard and could be bought with LOT ERC-20 tokens
  */
 contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
-
     enum LOTTERY_STATE {
         OPEN,
         CLOSED,
         CALCULATING_WINNER
     }
-    
+
     VRFCoordinatorV2Interface private _coordinator;
     IERC20 private _lotCoin;
     LOTTERY_STATE private _lotteryState;
@@ -44,7 +43,7 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
 
     // Mapping from number of ticket to participant.
     mapping(uint256 => address) private _userTickets;
-    // Mapping from number of lottery to lottery winner.    
+    // Mapping from number of lottery to lottery winner.
     mapping(uint256 => address) private _lotteryWinners;
 
     /**
@@ -99,6 +98,15 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     /**
      * @dev vrfCoordinator_ and keyHash_ can be obtained
      * from here: https://docs.chain.link/docs/vrf-contracts/
+     *
+     * Requirements:
+     *
+     * - `subscriptionId_` cannot be zero.
+     * - `keyHash_` cannot be address zero.
+     * - `vrfCoordinator_` cannot be address zero.
+     * - `token_` cannot be address zero.
+     * - The sum of `percentageWinner_` and `percentageOwner_` must be 100(percent).
+     *
      * @param subscriptionId_  can be obtained from here: https://vrf.chain.link
      * @param vrfCoordinator_  VRF coordinator contract address
      * @param keyHash_ The gas lane key hash value, which is the maximum
@@ -137,6 +145,12 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
      * @notice Start new lottery and allow players to buy tickets
      * Only owner could call this function
      * @dev The state of previous lottery is reseted
+     *
+     * Requirements:
+     *
+     * - `_lotteryState` must be in `CLOSED` state.
+     *
+     * Emits a {NewLotteryStarted} event.
      */
     function startLottery() external onlyOwner {
         require(_lotteryState == LOTTERY_STATE.CLOSED, "Can't start a new lottery");
@@ -152,9 +166,14 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
      * @notice ticket price is based on 'LOT' ERC20 standard token
      * Every user could buy multiple tickets
      * @dev Each ticket is ERC721 token
-     * It's required to approve _ticketPrice amount of tokens for this contract
-     * in order to participate
-     * NewParticipant event is emitted
+     *
+     * Requirements:
+     *
+     * - It's required to approve _ticketPrice amount of tokens for this contract
+     * in order to participate.
+     * - `_lotteryState` must be in `OPEN` state.
+     *
+     * Emits a {NewParticipant} event.
      */
     function participate() external {
         require(_lotteryState == LOTTERY_STATE.OPEN, "Wait until the next lottery");
@@ -172,7 +191,14 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
      * Only owner could call this function
      * @dev endLottery() calls _pickWinner(), which in turn calls the
      * requestRandomWords function from VRFv2
-     * At least one participant is required to call this function
+     *
+     * Requirements:
+     *
+     * - At least one participant is required to allow owner call this function.
+     * - `_lotteryState` must be in `OPEN` state.
+     * - `_lotteryBalance` must be equal to or greater than 100 tokens.
+     *
+     * Emits a {RequestedRandomness} event.
      */
     function endLottery() external onlyOwner {
         require(_lotteryState == LOTTERY_STATE.OPEN, "Can't end lottery yet");
@@ -186,7 +212,8 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
      * @notice Function to calculate the winner
      * Only owner could call this function
      * @dev Will revert if subscription is not set and funded
-     * RequestRandomness event is emitted
+     *
+     * Emits a {RequestedRandomness} event.
      */
     function _pickWinner() private {
         require(_lotteryState == LOTTERY_STATE.CALCULATING_WINNER, "Lottery not ended yet");
@@ -203,15 +230,21 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
     /**
      * @notice Get random number, pick winner and sent prize to winner
      * @dev Function can be fulfilled only from _vrfcoordinator
-     * ReceivedRandomness and LotteryEnded events are emitted
-     * @param reqId requestId for generating random number
-     * @param random received number from VRFv2
+     * @param reqId_ requestId for generating random number
+     * @param random_ received number from VRFv2
+     *
+     * Requirements:
+     *
+     * - The first random word must be higher than zero.
+     *
+     * Emits a {ReceivedRandomness} event.
+     * Emits a {LotteryEnded} event.
      */
     function fulfillRandomWords(
-        uint256 reqId, /* requestId */
-        uint256[] memory random
+        uint256 reqId_, /* requestId */
+        uint256[] memory random_
     ) internal override {
-        _randomWord = random;
+        _randomWord = random_;
         require(_randomWord[0] > 0, "Random number not found");
         uint256 winnerTicket = (_randomWord[0] % _numberOfTicket) + 1;
         _lotteryWinners[_lotteryId] = _userTickets[winnerTicket];
@@ -220,41 +253,49 @@ contract Lottery is VRFConsumerBaseV2, ERC721, Ownable {
         success = _lotCoin.transfer(owner(), (_lotteryBalance * _percentageOwner) / 100);
         require(success, "Transfer of funds to the owner ended in failure");
         _lotteryState = LOTTERY_STATE.CLOSED;
-        emit ReceivedRandomness(reqId, random[0]);
+        emit ReceivedRandomness(reqId_, random_[0]);
         emit LotteryEnded(_lotteryId, _userTickets[winnerTicket]);
     }
 
     /**
      * @notice Update _subscriptionId
-     * @dev SubscriptionChanged event emitted
-     * @param newSubscriptionId new _subscriptionId
+     * @param newSubscriptionId_ new _subscriptionId
+     *
+     * Emits a {SubscriptionChanged} event.
      */
-    function updateSubscriptionId(uint64 newSubscriptionId) external onlyOwner {
-        _subscriptionId = newSubscriptionId;
+    function updateSubscriptionId(uint64 newSubscriptionId_) external onlyOwner {
+        _subscriptionId = newSubscriptionId_;
         emit SubscriptionChanged(_subscriptionId);
     }
 
     /**
-     * @notice Update Participation Fee
-     * @dev ParticipationFeeUpdated event emitted
-     * @param newTicketPrice new price of ticket in 'LOT' tokens
-     */
-    function updateTicketPrice(uint64 newTicketPrice) external onlyOwner {
-        _ticketPrice = newTicketPrice * 10**18;
-        emit ParticipationFeeUpdated(_ticketPrice);
-    }
-
-    /**
      * @notice Update the percentages of the total balance paid for the winner and owner
-     * PercentagesChanged event is emitted
+     *
+     * Requirements:
+     *
+     * - The sum of `percentageWinner_` and `percentageOwner_` must be 100(percent).
+     *
      * @param percentageWinner_ new percentage for the winner
      * @param percentageOwner_ new percentage for the owner
+     *
+     * Emits a {PercentagesChanged} event.
      */
     function updatePercentages(uint256 percentageWinner_, uint256 percentageOwner_) external onlyOwner {
         require(percentageWinner_ + percentageOwner_ == 100, "Wrong percentages!");
         _percentageWinner = percentageWinner_;
         _percentageOwner = percentageOwner_;
         emit PercentagesChanged(_percentageWinner, _percentageOwner);
+    }
+
+    /**
+     * @notice Update Participation Fee
+     * @param newTicketPrice_ new price of ticket in 'LOT' tokens
+     *
+     * Emits a {ParticipationFeeUpdated} event.
+     */
+    function updateTicketPrice(uint64 newTicketPrice_) external onlyOwner {
+        _ticketPrice = newTicketPrice_ * 10**18;
+        emit ParticipationFeeUpdated(_ticketPrice);
     }
 
     /**
