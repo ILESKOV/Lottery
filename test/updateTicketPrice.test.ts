@@ -50,7 +50,7 @@ beforeEach(async () => {
         50
     )
 })
-describe("update ticket price tests", function () {
+describe("updateTicketPrice() tests", function () {
     it("Successfully updates ticket price", async () => {
         expect(await Lottery.getTicketPrice()).to.equal(BigNumber.from("50000000000000000000"))
         await expect(Lottery.updateTicketPrice(10))
