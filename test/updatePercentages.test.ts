@@ -50,6 +50,8 @@ beforeEach(async () => {
         50
     )
 
+    const subscriptionId = await Lottery.getSubscriptionId()
+    await VrfCoordinatorV2Mock.addConsumer(subscriptionId, Lottery.address)
     await Lottery.startLottery()
     await LOT.transfer(player1Wallet, BigNumber.from("500000000000000000000"))
     await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
