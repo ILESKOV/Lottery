@@ -1,10 +1,8 @@
-import "@nomiclabs/hardhat-waffle"
+import "@nomicfoundation/hardhat-toolbox"
+import "@nomicfoundation/hardhat-chai-matchers"
+import "@nomiclabs/hardhat-ethers"
 import "@nomiclabs/hardhat-solhint"
-import "@nomiclabs/hardhat-etherscan"
-import "@typechain/hardhat"
-import "solidity-coverage"
 import "solidity-docgen"
-import "hardhat-gas-reporter"
 import "hardhat-contract-sizer"
 
 import * as dotenv from "dotenv"
