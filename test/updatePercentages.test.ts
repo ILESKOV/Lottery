@@ -55,7 +55,7 @@ beforeEach(async () => {
     await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
 })
 
-describe("updatePercentages", function () {
+describe("updatePercentages() tests", function () {
     describe("negative tests", function () {
         it("revert if owner trying to set wrong percentages", async () => {
             await expect(Lottery.updatePercentages(101, 50)).to.be.revertedWith("Wrong percentages!")
