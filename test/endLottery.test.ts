@@ -53,7 +53,7 @@ beforeEach(async () => {
     await LOT.transfer(player1Wallet, BigNumber.from("500000000000000000000"))
     await LOT.connect(player1).approve(Lottery.address, BigNumber.from("50000000000000000000"))
 })
-describe("end lottery", function () {
+describe("endLottery() tests", function () {
     describe("negative tests", function () {
         it("impossible to end lottery that didn't started", async () => {
             await expect(Lottery.endLottery()).to.be.revertedWith("Can't end lottery yet")
